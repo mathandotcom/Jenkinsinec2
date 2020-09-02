@@ -1,0 +1,30 @@
+## Install Docker.
+sudo yum install docker
+ 
+## Add the ec2-user to the docker group so you can execute Docker commands without using sudo.
+## Exit the terminal and re-login to make the change effective
+sudo usermod -a -G docker ec2-user
+exit
+
+sudo su -
+
+service docker start
+
+service docker status
+
+## Run docker jenkins blueocean container
+docker run \
+  -u root \
+  --rm \
+  -d \
+  -p 8080:8080 \
+  -p 50000:50000 \
+  --name myjenkin \
+  -v jenkins-data:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  jenkinsci/blueocean
+  
+  ## get the administrator password
+docker exec -it myjenkin bash
+cat /var/jenkins_home/secrets/initialAdminPassword
+exit
