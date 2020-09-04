@@ -1,4 +1,5 @@
-## Install Docker.
+## Install Jenkins using Docker Image
+
 sudo yum install docker
  
 ## Add the ec2-user to the docker group so you can execute Docker commands without using sudo.
@@ -28,3 +29,11 @@ docker run \
 docker exec -it myjenkin bash
 cat /var/jenkins_home/secrets/initialAdminPassword
 exit
+
+#-------------------------------------------------------
+Stand alone Jenkins
+1. Install Java 8
+2. Make Java 8 as default version
+3. Install Jenkins
+4. sudo usermod -a -G docker ec2-user
+5. sudo usermod -a -G docker jenkins
