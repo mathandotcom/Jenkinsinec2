@@ -1,0 +1,25 @@
+node {
+    stage ('SCM Checkout'){
+        git credentialsId: 'git-creds', url: 'https://github.com/mathandotcom/docker-node-server.git'
+    }
+    
+    stage('Build Docker') {
+     sh 'docker build -t mathandotcom/test:3.0.0 .'  
+    }
+
+  stage('Push Docker Image to DockerHub'){
+        withCredentials([string(credentialsId: 'docker-pwd', variable: 'dockerpassword')]) {
+            sh "docker login -u mathandotcom -p ${dockerpassword}"
+        }
+        sh 'docker push mathandotcom/test:3.0.0'
+    }
+    
+    stage('Run Container in AWS DEV'){
+			def dockerRun ='docker run -p 80:80 -d --name mycontainer mathandotcom/test:3.0.0'
+			sshagent(['dev-server']) {
+				sh "ssh -o StrictHostKeyChecking=no ec2-user@18.206.192.28 ${dockerRun}"
+			}
+        
+    }
+
+}
